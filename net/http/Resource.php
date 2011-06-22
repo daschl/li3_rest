@@ -17,8 +17,6 @@ use lithium\util\String;
  * The `Resource` class acts as a more high-level interface to the `Route` class 
  * and takes care of instantiating the appropriate routes for a given resource.
  * 
- * TODO:
- *  - make :id: better configurable by default (mongo, mysql..)
  * 
  * In your `routes.php` file you can connect a resource in its simplest form like this:
  * 
@@ -28,13 +26,35 @@ use lithium\util\String;
  * 
  * This will automatically generate this CRUD routes for you (output similar to `li3 route`):
  * 
- * /posts               	{"controller":"posts","action":"index"}
- * /posts/{:id:\d+}     	{"controller":"posts","action":"show"}
- * /posts/add           	{"controller":"posts","action":"add"}
- * /posts               	{"controller":"posts","action":"create"}
- * /posts/{:id:\d+}/edit	{"controller":"posts","action":"edit"}
- * /posts/{:id:\d+}     	{"controller":"posts","action":"update"}
- * /posts/{:id:\d+}     	{"controller":"posts","action":"delete"}
+ * {{{
+ * /posts(.{:type:\w+})*                               	    {"controller":"posts","action":"index"}
+ * /posts/{:id:[0-9a-f]{24}|[0-9]+}(.{:type:\w+})*        	{"controller":"posts","action":"show"}
+ * /posts/add                          	                    {"controller":"posts","action":"add"}
+ * /posts(.{:type:\w+})*                            	    {"controller":"posts","action":"create"}
+ * /posts/{:id:[0-9a-f]{24}|[0-9]+}/edit	                {"controller":"posts","action":"edit"}
+ * /posts/{:id:[0-9a-f]{24}|[0-9]+}(.{:type:\w+})*       	{"controller":"posts","action":"update"}
+ * /posts/{:id:[0-9a-f]{24}|[0-9]+}(.{:type:\w+})*       	{"controller":"posts","action":"delete"}
+ * }}}
+ * 
+ * This routes look complex in the first place, but they try to be as flexible as possible. You can pass 
+ * all default ids (both MongoDB and for relational databases) and always an optional type (like `json`).
+ * With the default resource activated, you can use the following URIs.
+ * 
+ * {{{
+ * GET /posts or /posts.json => Show a list of available posts
+ * GET /posts/1234 or /posts/1234.json => Show the post with the ID 1234
+ * GET /posts/add => Add a new post (maybe a HTML form)
+ * PUT /posts or /posts.json => Add a new post (has the form data attached)
+ * GET /posts/1234/edit => Edit the post with the ID 1234 (maybe a HTML form)
+ * PUT /posts/1234 or /posts/1234.json => Edit the post with the ID 1234 (has the form data attached)
+ * DELETE /posts/1234 or /posts/1234.json => Deletes the post with the ID 1234
+ * }}}
+ * 
+ * If you wonder why there is no POST http method included, here's the reason: in a classical 
+ * RESTful design, POST is used to create a new sub-resource (and this plugin currently does not 
+ * support sub-resources out of the box). If you use the helpers that come with this plugin, you 
+ * should not notice any difference as they handle the http methods for you. Just keep this in mind 
+ * when you test your web services with CURL.
  * 
  */
 class Resource extends \lithium\core\Object {
@@ -55,46 +75,32 @@ class Resource extends \lithium\core\Object {
 	 */
 	protected static $_types = array(
 		'index' => array(
-			'template' => '/{:resource}',
-			'params' => array(
-				'http:method' => 'GET'
-			)
+			'template' => '/{:resource}(.{:type:\w+})*',
+			'params' => array('http:method' => 'GET')
 		),
 		'show' => array(
-			'template' => '/{:resource}/{:id:\d+}',
-			'params' => array(
-				'http:method' => 'GET'
-			)
+			'template' => '/{:resource}/{:id:[0-9a-f]{24}|[0-9]+}(.{:type:\w+})*',
+			'params' => array('http:method' => 'GET')
 		),
 		'add' => array(
 			'template' => '/{:resource}/add',
-			'params' => array(
-				'http:method' => 'GET'
-			)
+			'params' => array('http:method' => 'GET')
 		),
 		'create' => array(
-			'template' => '/{:resource}',
-			'params' => array(
-				'http:method' => 'POST'
-			)
+			'template' => '/{:resource}(.{:type:\w+})*',
+			'params' => array('http:method' => 'PUT')
 		),
 		'edit' => array(
-			'template' => '/{:resource}/{:id:\d+}/edit',
-			'params' => array(
-				'http:method' => 'GET'
-			)
+			'template' => '/{:resource}/{:id:[0-9a-f]{24}|[0-9]+}/edit',
+			'params' => array('http:method' => 'GET')
 		),
 		'update' => array(
-			'template' => '/{:resource}/{:id:\d+}',
-			'params' => array(
-				'http:method' => 'PUT'
-			)
+			'template' => '/{:resource}/{:id:[0-9a-f]{24}|[0-9]+}(.{:type:\w+})*',
+			'params' => array('http:method' => 'PUT')
 		),
 		'delete' => array(
-			'template' => '/{:resource}/{:id:\d+}',
-			'params' => array(
-				'http:method' => 'DELETE'
-			)
+			'template' => '/{:resource}/{:id:[0-9a-f]{24}|[0-9]+}(.{:type:\w+})*',
+			'params' => array('http:method' => 'DELETE')
 		)
 	);
 

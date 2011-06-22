@@ -10,6 +10,16 @@ namespace li3_rest\net\http;
 
 class Router extends \lithium\net\http\Router {
 
+	/**
+	 * Classes used by `Router`.
+	 *
+	 * @var array
+	 */
+	protected static $_classes = array(
+		'route' => 'lithium\net\http\Route',
+		'resource' => 'li3_rest\net\http\Resource'
+	);
+	
 	public static function resource($resource, $options = array()) {
 		$class = static::$_classes['resource'];
 
