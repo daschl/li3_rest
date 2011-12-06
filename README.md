@@ -1,7 +1,7 @@
 # li3_rest: RESTful support for the Lithium framework
 
 ## Introduction
-This plugin lets you define on ore more `resources`, which map automatically to their appropriate 
+This plugin lets you define one or more `resources`, which map automatically to their appropriate 
 controller actions. The plugin provides a common set of default settings, which should work for 
 the common cases (nonetheless it is possible to customize every part of the plugin easily). Read on 
 for a hands-on guide on how to install and use the plugin.
@@ -32,7 +32,7 @@ If you want to add a `resource`, you have to call the `Router::resource()` metho
 The first param is the name of the `resource` (which has great impact on the routes generated), the second 
 one is an array of options that will optionally override the default settings.
 
-If you want to add a `Posts` resource, add the followin to `app/config/routes.php`:
+If you want to add a `Posts` resource, add the following to `app/config/routes.php`:
 
 	Router::resource('Posts');
 
