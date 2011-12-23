@@ -53,20 +53,13 @@ With the default resource activated, you can use the following URIs.
 	GET /posts or /posts.json => Show a list of available posts
 	GET /posts/1234 or /posts/1234.json => Show the post with the ID 1234
 	GET /posts/add => Add a new post (maybe a HTML form)
-	PUT /posts or /posts.json => Add a new post (has the form data attached)
+	POST /posts or /posts.json => Add a new post (has the form data attached)
 	GET /posts/1234/edit => Edit the post with the ID 1234 (maybe a HTML form)
 	PUT /posts/1234 or /posts/1234.json => Edit the post with the ID 1234 (has the form data attached)
 	DELETE /posts/1234 or /posts/1234.json => Deletes the post with the ID 1234
-
-If you wonder why there is no POST http method included, here's the reason: in a classical 
-RESTful design, POST is used to create a new sub-resource (and this plugin currently does not 
-support sub-resources out of the box). If you use the helpers that come with this plugin, you 
-should not notice any difference as they handle the http methods for you. Just keep this in mind 
-when you test your web services with CURL.
 
 Note: as this plugin is currently in the making, I'll add more documentation as soon as the api and generated 
 routes have stableized.
 
 ## Contributing
-Feel free to fork the plugin and send in pull requests. If you find any bugs or need a feature that is not 
-(yet) implemented, open a ticket.
+Feel free to fork the plugin and send in pull requests. If you find any bugs or need a feature that is not implemented, open a ticket.
