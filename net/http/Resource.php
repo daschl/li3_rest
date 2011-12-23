@@ -88,7 +88,7 @@ class Resource extends \lithium\core\Object {
 		),
 		'create' => array(
 			'template' => '/{:resource}(.{:type:\w+})*',
-			'params' => array('http:method' => 'PUT')
+			'params' => array('http:method' => 'POST')
 		),
 		'edit' => array(
 			'template' => '/{:resource}/{:id:[0-9a-f]{24}|[0-9]+}/edit',
